@@ -9,7 +9,7 @@
         <h2 align="center">Modelo Roteador Wireless N 300Mbps
 TL-WR849N</h2>
         <p>
-          <ul>
+          <ul align="justify">
             <li>Velocidade wireless de 300Mbps ideal para aplicações sensíveis a interrupções, como streaming de vídeo em HD</li>
             <li>Fácil configuração da criptografia de segurança da rede wireless com um simples toque no botão WPS Controle de banda baseado em IP permite aos administradores determinarem que largura de banda será alocada para cada computador</li>
             <li>WDS wireless bridge fornece perfeita ponte para expandir a rede wireless</li>
