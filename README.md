@@ -18,3 +18,95 @@ TL-WR849N</h2>
       </td>
     </tr>
 </table>
+
+<h2>Funcionamento da Autenticação do TP-Link - TL-WR849N</h2>
+
+ - Capturando url atual e subscrevendo o valor para o link definido no replace e redirecionando o usúario.
+ - Criando uma variavél isLocker e atribuindo o valor false a mesma.
+ - Deletando o cookie Authorization, vulgo responsável pela a autenticação.
+ 
+```javascript
+var url = window.location.href;
+
+if (url.indexOf("tplinklogin.net") >= 0)
+{
+    url = url.replace("tplinklogin.net", "tplinkwifi.net");
+    window.location = url;
+}
+
+var isLocked = false;
+
+deleteCookie("Authorization");
+```
+
+<h3>Função responsável implementar a hash base64, que é utilizada para setar o Cookie de autenticação.</h3>
+
+```javascript
+
+function Base64Encoding(input) 
+{
+	var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+	var output = "";
+	var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+	var i = 0;
+	input = utf8_encode(input);
+	while (i < input.length) 
+	{
+		chr1 = input.charCodeAt(i++);
+		chr2 = input.charCodeAt(i++);
+		chr3 = input.charCodeAt(i++);
+		enc1 = chr1 >> 2;
+		enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+		enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+		enc4 = chr3 & 63;
+		
+		if (isNaN(chr2)) 
+		{
+			enc3 = enc4 = 64;
+		} 
+		else if (isNaN(chr3)) 
+		{
+			enc4 = 64;
+		}
+		output = output + keyStr.charAt(enc1) + keyStr.charAt(enc2) + keyStr.charAt(enc3) + keyStr.charAt(enc4);
+	}
+	return output;
+}
+```
+
+### Função que monitora o clique de login e captura os dados informado pelo usúario
+
+```javascript
+
+function PCWin(event)
+{
+	if (event.keyCode == 13)
+	{
+		PCSubWin();
+	}
+}
+
+function PCSubWin()
+{	
+    // Verifica se o usúario não está bloqueado por alguns segundos
+	if (isLocked == true)
+	{
+		return ;
+	}
+    // Criando uma variavel que receberá o base64 referente a autenticação
+    // E criando duas variavels para receber o userName e o password
+	var auth;
+	var password = $("pcPassword").value;
+	var userName = $("userName").value;
+    
+    // Concatena a palavra "Basic" com a hash base64 de userName com ":" e o password
+    auth = "Basic "+Base64Encoding(userName+":"+password);
+    // Atribui o valor ao Cookie do navegador com a chave Authorization e com o auth como conteúdo
+    document.cookie = "Authorization=" + auth;
+    // Recarrega a página
+    window.location.reload();
+}
+
+```
+
+### Entendendo o funcionamento do Script trb.py
