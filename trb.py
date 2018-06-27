@@ -16,7 +16,7 @@ def splash():
     )
 
 if len(sys.argv) < 2:
-    splash();
+    splash()
     print("\tUsage: ./trb.py user IPRouter wordlist\n\n")
     exit(1)
 
